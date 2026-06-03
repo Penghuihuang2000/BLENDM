@@ -1,0 +1,78 @@
+# BLENDM
+
+**BLEND-M: Cellular Deconvolution with Personalized DNA Methylation References**
+
+## Overview
+
+`BLENDM` is an R package for reference-based cellular deconvolution of bulk DNA methylation (DNAm) data. Unlike existing methods that assume a shared cell-type-specific (CTS) reference across all samples, BLEND-M learns a **personalized** CTS reference profile for each bulk sample by blending available purified reference data. It also explicitly models **heteroscedasticity** across marker CpGs via a two-step inverse-variance weighted non-negative least squares estimator, improving robustness to noisy markers.
+
+## Key Features
+
+- **Personalized references**: learns sample-specific CTS DNAm profiles rather than assuming a shared population reference
+- **Heteroscedasticity modeling**: down-weights high-variance CpG sites for more robust fraction estimates
+- **Two-step estimator**: computationally efficient and provably optimal (asymptotically equivalent to the oracle estimator with known variances)
+- **Marker CpG selection**: built-in two-step procedure (ANOVA on M-values + effect size filter) for identifying informative CpGs from purified reference panels
+
+## Installation
+
+```r
+# install.packages("remotes")
+remotes::install_github("penghuihuang/BLENDM")
+```
+
+Dependencies: `nnls`, `rlist`
+
+## Usage
+
+### Step 1: Select marker CpGs from a purified reference panel
+
+```r
+library(BLENDM)
+
+# beta_ref:          G x M matrix of beta values from purified cell-type samples
+# cell_type_labels:  character vector of cell type labels, length M
+
+markers <- select_marker_cpg(
+  beta_val    = beta_ref,
+  cell_type   = cell_type_labels,
+  pval_cutoff = 0.05,
+  diff_cutoff = 10
+)
+```
+
+### Step 2: Deconvolve bulk samples
+
+```r
+# reference.list: named list of matrices, one per cell type (G x M_t each)
+# bulk_beta:      G x N matrix of bulk sample beta values
+
+fractions <- BLENDM(
+  mixture_sample = bulk_beta[markers, ],
+  reference.list = lapply(reference.list, function(x) x[markers, ])
+)
+
+# fractions: N x T matrix (samples x cell types), rows sum to 1
+```
+
+## Method
+
+BLEND-M models bulk DNAm levels as:
+
+$$\mu_{gn} = \sum_t \sum_m \Psi_{nmt} X_{gmt}$$
+
+where $X_{gmt}$ is the beta value of CpG $g$ in the $m$-th purified sample for cell type $t$, and $\Psi_{nmt} \geq 0$ with $\sum_{t,m} \Psi_{nmt} = 1$. Cell type fractions are $\beta_{nt} = \sum_m \Psi_{nmt}$.
+
+Estimation proceeds in two steps:
+
+1. **Step I**: Initial NNLS estimate of $\Psi_n$; maximum likelihood estimation of CpG-specific precision parameters $\phi_g$
+2. **Step II**: Final inverse-variance weighted NNLS using $\hat{\sigma}^2_{gn} = \hat{\mu}_{gn}(1-\hat{\mu}_{gn})/(1+\hat{\phi}_g)$
+
+## Citation
+
+If you use BLENDM, please cite:
+
+> Huang P, Peters DG, McKennan C. BLEND-M: cellular deconvolution with personalized DNA methylation references. 2025.
+
+## License
+
+MIT

@@ -1,0 +1,24 @@
+Package: BLENDM
+Type: Package
+Title: BLEND-M: Cellular Deconvolution with Personalized DNA Methylation References
+Version: 0.1.0
+Date: 2026-06-03
+Authors@R: person("Penghui", "Huang", role = c("aut", "cre"),
+                   email = "peh57@pitt.edu")
+Description: BLENDM performs reference-based cellular deconvolution of bulk DNA
+    methylation (DNAm) data. Unlike existing methods that assume a shared reference
+    across all samples, BLEND-M learns personalized cell-type-specific (CTS) reference
+    profiles for each bulk sample by blending available purified reference data. It
+    explicitly models heteroscedasticity across marker CpGs via a two-step
+    inverse-variance weighted non-negative least squares estimator, improving
+    robustness to noisy markers. The package also provides a two-step marker CpG
+    selection procedure that identifies CpGs with strong cell-type specificity.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 4.0.0)
+Imports:
+    nnls,
+    rlist
+RoxygenNote: 7.3.2
