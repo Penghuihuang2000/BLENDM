@@ -54,18 +54,6 @@ fractions <- BLENDM(
 # fractions: N x T matrix (samples x cell types), rows sum to 1
 ```
 
-## Method
-
-BLEND-M models bulk DNAm levels as:
-
-$$\mu_{gn} = \sum_t \sum_m \Psi_{nmt} X_{gmt}$$
-
-where $X_{gmt}$ is the beta value of CpG $g$ in the $m$-th purified sample for cell type $t$, and $\Psi_{nmt} \geq 0$ with $\sum_{t,m} \Psi_{nmt} = 1$. Cell type fractions are $\beta_{nt} = \sum_m \Psi_{nmt}$.
-
-Estimation proceeds in two steps:
-
-1. **Step I**: Initial NNLS estimate of $\Psi_n$; maximum likelihood estimation of CpG-specific precision parameters $\phi_g$
-2. **Step II**: Final inverse-variance weighted NNLS using $\hat{\sigma}^2_{gn} = \hat{\mu}_{gn}(1-\hat{\mu}_{gn})/(1+\hat{\phi}_g)$
 
 ## Citation
 
