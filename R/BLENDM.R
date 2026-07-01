@@ -155,7 +155,8 @@ estimate_dispersion <- function(obs.data, mean, lower = 1e-6, upper = 1e3) {
 #'   Each matrix has CpG sites as rows (with row names matching those of
 #'   \code{mixture_sample}) and purified reference samples as columns. The
 #'   names of the list define the cell type labels returned in the output.
-#'
+#' @param unknown.include TRUE or FALSE, decide if we consider a cell type with unknown reference.
+#'  Default as TRUE, recommended for real data application.
 #' @return A numeric matrix of estimated cell type fractions with bulk samples
 #'   as rows and cell types as columns. Each row sums to 1. Column names
 #'   correspond to the names of \code{reference.list}.
@@ -165,14 +166,22 @@ estimate_dispersion <- function(obs.data, mean, lower = 1e-6, upper = 1e3) {
 #' @importFrom nnls nnls
 #' @importFrom rlist list.cbind list.rbind
 #' @export
-BLENDM <- function(mixture_sample, reference.list) {
+BLENDM <- function(mixture_sample, reference.list, unknown.include = TRUE) {
+  if(unknown.include){
+    unknown.ct <- matrix(1, nrow = nrow(reference.list[[1]]), ncol=2)
+    unknown.ct[,2] <- 1
+    colnames(unknown.ct) <- c("unknown0","unknown1") # just to have two columns, same 1 vectors
+    rownames(unknown.ct) <- rownames(reference.list[[1]])
+    reference.list <- c(reference.list, list("unknown"=unknown.ct))
+  }
+  
   M <- unlist(lapply(reference.list, ncol))  # number of purified samples per cell type
   G <- nrow(mixture_sample)                  # number of CpGs
   N <- ncol(mixture_sample)                  # number of bulk samples
 
   ## Build full reference matrix (G x sum(M))
   reference.mtx <- as.matrix(rlist::list.cbind(reference.list))
-
+  
   ## Clamp boundary beta values
   mixture_sample[mixture_sample == 1] <- 1 - 1e-15
   mixture_sample[mixture_sample == 0] <- 1e-15

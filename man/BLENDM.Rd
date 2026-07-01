@@ -4,7 +4,7 @@
 \alias{BLENDM}
 \title{BLEND-M: Cellular Deconvolution with Personalized DNA Methylation References}
 \usage{
-BLENDM(mixture_sample, reference.list)
+BLENDM(mixture_sample, reference.list, unknown.include = TRUE)
 }
 \arguments{
 \item{mixture_sample}{A numeric matrix of DNAm beta values for bulk samples,
@@ -16,6 +16,9 @@ or 1 are clamped internally.}
 Each matrix has CpG sites as rows (with row names matching those of
 \code{mixture_sample}) and purified reference samples as columns. The
 names of the list define the cell type labels returned in the output.}
+
+\item{unknown.include}{TRUE or FALSE, decide if we consider a cell type with unknown reference.
+Default as TRUE, recommended for real data application.}
 }
 \value{
 A numeric matrix of estimated cell type fractions with bulk samples
