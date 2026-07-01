@@ -16,8 +16,7 @@
 ## Installation
 
 ```r
-# install.packages("remotes")
-remotes::install_github("penghuihuang/BLENDM")
+devtools::install_github("Penghuihuang2000/BLENDM")
 ```
 
 Dependencies: `nnls`, `rlist`
