@@ -13,6 +13,15 @@
 - **Two-step estimator**: computationally efficient and provably optimal (asymptotically equivalent to the oracle estimator with known variances)
 - **Marker CpG selection**: built-in two-step procedure (ANOVA on M-values + effect size filter) for identifying informative CpGs from purified reference panels
 
+## Ready-to-use reference list
+
+Ready-to-use. Covers the marker CpGs selected using marker selection steps in BLEND-M manuscript. 
+
+Two Choices. Essentially the same panel, just different resolutions.
+
+- If just need general cell fractions: https://drive.google.com/file/d/1-Jwp7i7eAHRLVgB2v-XnRQ_pHXJ0KJ9O/view?usp=drive_link
+- (Mostly useful for children blood DNAm deconvolution) If further need cord cell type fractions and adult blood cell type fractions: https://drive.google.com/file/d/1wrnUvJGrV7BIb0nnfP5KxwvtE7KARQSA/view?usp=drive_link
+
 ## Installation
 
 ```r
